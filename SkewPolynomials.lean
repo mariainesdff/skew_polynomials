@@ -76,8 +76,132 @@ instance sub {S : Type u} [Ring S] {φ : S →+* S}: Sub S[X;φ] :=
 instance mul' : Mul R[X;φ] :=
   ⟨mul⟩
 
-instance AddCommMonoid : AddCommMonoid R[X;φ] :=
-  inferInstanceAs (AddCommMonoid (AddMonoidAlgebra R ℕ))
+
+instance smulZeroClass {S : Type _} [SMulZeroClass S R] : SMulZeroClass S R[X;φ] where
+  smul r p := ⟨r • p.toFinsupp⟩
+  smul_zero a := congr_arg ofFinsupp (smul_zero a)
+
+-- to avoid a bug in the `ring` tactic
+instance (priority := 1) pow : Pow R[X;φ] ℕ where pow p n := npowRec n p
+
+@[simp]
+theorem ofFinsupp_zero : (⟨0⟩ : R[X;φ]) = 0 :=
+  rfl
+
+@[simp]
+theorem ofFinsupp_one : (⟨1⟩ : R[X;φ]) = 1 :=
+  rfl
+
+@[simp]
+theorem ofFinsupp_add {a b} : (⟨a + b⟩ : R[X;φ]) = ⟨a⟩ + ⟨b⟩ :=
+  show _ = add _ _ by rw [add_def]
+
+@[simp]
+theorem ofFinsupp_neg {S : Type u} [Ring S] {φ : S →+* S} {a} : (⟨-a⟩ : S[X;φ]) = -⟨a⟩ :=
+  show _ = neg _ by rw [neg_def]
+
+@[simp]
+theorem ofFinsupp_sub {S : Type u} [Ring S] {φ : S →+* S} {a b} : (⟨a - b⟩ : S[X;φ]) = ⟨a⟩ - ⟨b⟩ := by
+  rw [sub_eq_add_neg, ofFinsupp_add, ofFinsupp_neg]
+  rfl
+
+@[simp]
+theorem ofFinsupp_mul (a b) : (⟨a * b⟩ : R[X;φ]) = ⟨a⟩ * ⟨b⟩ :=
+  show _ = mul _ _ by rw [mul_def]
+
+@[simp]
+theorem ofFinsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b) :
+    (⟨a • b⟩ : R[X;φ]) = (a • ⟨b⟩ : R[X;φ]) :=
+  rfl
+
+@[simp]
+theorem ofFinsupp_pow (a) (n : ℕ) : (⟨a ^ n⟩ : R[X;φ]) = ⟨a⟩ ^ n := by
+  change _ = npowRec n _
+  induction n with
+  | zero        => simp [npowRec]
+  | succ n n_ih => simp [npowRec, n_ih, pow_succ]
+
+@[simp]
+theorem toFinsupp_zero : (0 : R[X;φ]).toFinsupp = 0 :=
+  rfl
+
+@[simp]
+theorem toFinsupp_one : (1 : R[X;φ]).toFinsupp = 1 :=
+  rfl
+
+@[simp]
+theorem toFinsupp_add (a b : R[X;φ]) : (a + b).toFinsupp = a.toFinsupp + b.toFinsupp := by
+  cases a
+  cases b
+  rw [← ofFinsupp_add]
+
+@[simp]
+theorem toFinsupp_neg {S : Type u} [Ring S] {φ : S →+* S} (a : S[X;φ]) : (-a).toFinsupp = -a.toFinsupp := by
+  cases a
+  rw [← ofFinsupp_neg]
+
+@[simp]
+theorem toFinsupp_sub {S : Type u} [Ring S] {φ : S →+* S} (a b : S[X;φ]) :
+    (a - b).toFinsupp = a.toFinsupp - b.toFinsupp := by
+  rw [sub_eq_add_neg, ← toFinsupp_neg, ← toFinsupp_add]
+  rfl
+
+@[simp]
+theorem toFinsupp_mul (a b : R[X;φ]) : (a * b).toFinsupp = a.toFinsupp * b.toFinsupp := by
+  cases a
+  cases b
+  rw [← ofFinsupp_mul]
+
+
+@[simp]
+theorem toFinsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b : R[X;φ]) :
+    (a • b).toFinsupp = a • b.toFinsupp :=
+  rfl
+
+@[simp]
+theorem toFinsupp_pow (a : R[X;φ]) (n : ℕ) : (a ^ n).toFinsupp = a.toFinsupp ^ n := by
+  cases a
+  rw [← ofFinsupp_pow]
+
+theorem _root_.IsSMulRegular.polynomial {S : Type _} [Monoid S] [DistribMulAction S R] {a : S}
+    (ha : IsSMulRegular R a) : IsSMulRegular R[X;φ] a
+  | ⟨_x⟩, ⟨_y⟩, h => congr_arg _ <| ha.finsupp (Polynomial.ofFinsupp.inj h)
+
+theorem toFinsupp_injective : Function.Injective (toFinsupp : R[X;φ] → AddMonoidAlgebra _ _) :=
+  fun ⟨_x⟩ ⟨_y⟩ => congr_arg _
+
+@[simp]
+theorem toFinsupp_inj {a b : R[X;φ]} : a.toFinsupp = b.toFinsupp ↔ a = b :=
+  toFinsupp_injective.eq_iff
+
+@[simp]
+theorem toFinsupp_eq_zero {a : R[X;φ]} : a.toFinsupp = 0 ↔ a = 0 := by
+  rw [← toFinsupp_zero, toFinsupp_inj]
+
+@[simp]
+theorem toFinsupp_eq_one {a : R[X;φ]} : a.toFinsupp = 1 ↔ a = 1 := by
+  rw [← toFinsupp_one, toFinsupp_inj]
+
+/-- A more convenient spelling of `Polynomial.ofFinsupp.injEq` in terms of `Iff`. -/
+theorem ofFinsupp_inj {a b} : (⟨a⟩ : R[X;φ]) = ⟨b⟩ ↔ a = b :=
+  iff_of_eq (ofFinsupp.injEq _ _)
+
+@[simp]
+theorem ofFinsupp_eq_zero {a} : (⟨a⟩ : R[X;φ]) = 0 ↔ a = 0 := by
+  rw [← ofFinsupp_zero, ofFinsupp_inj]
+
+@[simp]
+theorem ofFinsupp_eq_one {a} : (⟨a⟩ : R[X;φ]) = 1 ↔ a = 1 := by rw [← ofFinsupp_one, ofFinsupp_inj]
+
+instance inhabited : Inhabited R[X;φ] :=
+  ⟨0⟩
+
+instance natCast : NatCast R[X;φ] :=
+  ⟨fun n => Polynomial.ofFinsupp n⟩
+
+
+instance AddCommMonoid : AddCommMonoid R[X;φ] := 
+    { (inferInstance : AddCommMonoid (AddMonoidAlgebra R ℕ)) }
   
 
 instance Semiring : Semiring R[X;φ] :=
