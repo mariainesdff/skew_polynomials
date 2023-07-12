@@ -55,6 +55,10 @@ private irreducible_def neg {S : Type _} [Ring S] {ψ : S →+* S} : S[X;ψ] →
 private def AddMonoidAlgebra.mul' (φ : R →+* R) (f g : AddMonoidAlgebra R ℕ): (AddMonoidAlgebra R ℕ) :=
   f.sum fun a₁ b₁ => g.sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * (φ^[a₁] b₂))
 
+private def AddMonoidAlgebra.pow' (φ : R →+* R) : ℕ → (AddMonoidAlgebra R ℕ) → (AddMonoidAlgebra R ℕ) 
+  | 0, _ => 1
+  | n + 1, f => AddMonoidAlgebra.mul' φ f (AddMonoidAlgebra.pow' φ n f)
+
 private irreducible_def mul : R[X;φ] → R[X;φ] → R[X;φ]
   | ⟨a⟩, ⟨b⟩ => ⟨AddMonoidAlgebra.mul' φ a b⟩
 
@@ -106,7 +110,7 @@ theorem ofFinsupp_sub {S : Type u} [Ring S] {φ : S →+* S} {a b} : (⟨a - b�
   rfl
 
 @[simp]
-theorem ofFinsupp_mul (a b) : (⟨a * b⟩ : R[X;φ]) = ⟨a⟩ * ⟨b⟩ :=
+theorem ofFinsupp_mul (a b) : (⟨AddMonoidAlgebra.mul' φ a b⟩ : R[X;φ]) = ⟨a⟩ * ⟨b⟩ := 
   show _ = mul _ _ by rw [mul_def]
 
 @[simp]
@@ -115,8 +119,8 @@ theorem ofFinsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b) :
   rfl
 
 @[simp]
-theorem ofFinsupp_pow (a) (n : ℕ) : (⟨a ^ n⟩ : R[X;φ]) = ⟨a⟩ ^ n := by
-  change _ = npowRec n _
+theorem ofFinsupp_pow (a) (n : ℕ) : (⟨AddMonoidAlgebra.pow' φ n a⟩ : R[X;φ]) = ⟨a⟩ ^ n := by
+  change _ = AddMonoidAlgebra.pow' φ n _
   induction n with
   | zero        => simp [npowRec]
   | succ n n_ih => simp [npowRec, n_ih, pow_succ]
