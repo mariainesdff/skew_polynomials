@@ -229,7 +229,8 @@ instance semiring : Semiring R[X;φ] :=
       rw [← toFinsupp_inj]
       haveI := Classical.decEq ℕ
       simp [mul_def, toFinsupp_mul, toFinsupp_add]
-      refine Eq.trans (congr_arg (sum f.toFinsupp) (funext₂ fun a₁ b₁ => sum_add_index ?_ ?_)) ?_ <;>
+      refine Eq.trans (congr_arg (sum f.toFinsupp) 
+        (funext₂ fun a₁ b₁ => sum_add_index ?_ ?_)) ?_ <;>
       simp [mul_add, mul_zero, RingHom.iterate_map_zero, AddMonoidAlgebra.single_add,
         RingHom.iterate_map_add, sum_add, AddMonoidAlgebra.mul'_def]
     right_distrib := by
@@ -257,13 +258,13 @@ instance ring (S : Type _) [Ring S] (ψ : S →+* S) : Ring S[X;ψ] :=
     one  := 1
     add  := (· + ·)
     mul  := (· * ·)
-    neg := (neg)
-    sub := (· - ·)
+    neg  := (neg)
+    sub  := (· - ·)
     natCast := fun n => ofFinsupp n
     intCast := fun n ↦ ofFinsupp n
-    sub_eq_add_neg := sorry
-    add_left_neg := sorry
-    intCast_ofNat := sorry
+    sub_eq_add_neg  := sorry
+    add_left_neg    := sorry
+    intCast_ofNat   := sorry
     intCast_negSucc := sorry }
 
 end SkewPolynomial
