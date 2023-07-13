@@ -243,10 +243,23 @@ instance semiring : Semiring R[X;φ] :=
         RingHom.iterate_map_add, sum_add, AddMonoidAlgebra.mul'_def]
     zero_mul := fun a ↦ by 
       rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero, sum_zero_index]
-    mul_zero := sorry
+    mul_zero := by intro a; rw [← toFinsupp_inj, toFinsupp_mul, 
+    AddMonoidAlgebra.mul'_def, toFinsupp_zero]; exact sum_zero; 
     mul_assoc := sorry
-    one_mul := sorry
-    mul_one := sorry
+    one_mul := fun a ↦ by
+    rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_one]
+    simp only [one_def]
+    simp only [zero_add, iterate_zero, id_eq, zero_mul, Finsupp.single_zero, sum_zero, 
+    Finsupp.sum_single_index, one_mul, AddMonoidAlgebra.sum_single]
+  mul_one := fun a ↦ by
+    rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_one]
+    simp only [one_def]
+    rw [Finsupp.sum_comm, Finsupp.sum_single_index]
+    simp only [Finsupp.sum_comm, Finsupp.sum_single_index, 
+     Function.iterate_fixed (RingHom.map_one φ) _, add_zero, AddMonoidAlgebra.single_eq_zero,
+     mul_one, AddMonoidAlgebra.sum_single]
+    simp only [add_zero,  AddMonoidAlgebra.single_eq_zero, AddMonoidAlgebra.sum_single_index _,
+     Function.iterate_fixed (RingHom.map_zero φ) _, mul_zero, Finsupp.single_zero, sum_zero]
     natCast_zero := by simp only [Nat.cast_zero, Finsupp.single_zero, ofFinsupp_eq_zero]
     natCast_succ := fun n ↦ by 
       rw [← toFinsupp_inj]
