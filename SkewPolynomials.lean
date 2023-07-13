@@ -262,8 +262,10 @@ instance ring (S : Type _) [Ring S] (ψ : S →+* S) : Ring S[X;ψ] :=
     sub  := (· - ·)
     natCast := fun n => ofFinsupp n
     intCast := fun n ↦ ofFinsupp n
-    sub_eq_add_neg  := sorry
-    add_left_neg    := sorry
+    sub_eq_add_neg  := fun a b ↦ by
+      rw [<- toFinsupp_inj, toFinsupp_add, toFinsupp_neg, toFinsupp_sub, sub_eq_add_neg]
+    add_left_neg := fun a ↦ by
+      rw [<- toFinsupp_inj, toFinsupp_add, toFinsupp_neg, add_left_neg, toFinsupp_zero]
     intCast_ofNat := fun n => by simp; rfl
     intCast_negSucc := fun n => by rw [<- ofFinsupp_neg]; simp; rfl }
 
