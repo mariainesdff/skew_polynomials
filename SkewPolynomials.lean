@@ -203,28 +203,21 @@ instance inhabited : Inhabited R[X;φ] :=
 instance natCast : NatCast R[X;φ] :=
   ⟨fun n => SkewPolynomial.ofFinsupp n⟩
 
-/- instance semiring : Semiring R[X;φ] :=
-  Function.Injective.semiring toFinsupp toFinsupp_injective toFinsupp_zero toFinsupp_one
-    toFinsupp_add toFinsupp_mul (fun _ _ => toFinsupp_smul _ _) toFinsupp_pow fun _ => rfl
-
-instance monoidWithZero : MonoidWithZero R[X;φ] :=
-  Function.Injective.monoidWithZero toFinsupp toFinsupp_injective
-
 instance AddCommMonoid : AddCommMonoid R[X;φ] := 
   Function.Injective.addCommMonoid toFinsupp toFinsupp_injective
   toFinsupp_zero toFinsupp_add (fun _ _ => toFinsupp_smul _ _)
 
 instance Semiring : Semiring R[X;φ] where
-  add := _
-  add_assoc := _
-  zero := _
-  zero_add := _
-  add_zero := _
-  nsmul := _
-  nsmul_zero := _
-  nsmul_succ := _
-  add_comm := _
-  mul := _
+  add := (· + ·)
+  add_assoc := AddCommMonoid.add_assoc
+  zero := 0
+  zero_add := AddCommMonoid.zero_add
+  add_zero := AddCommMonoid.add_zero
+  nsmul := (· • ·)
+  nsmul_zero := AddCommMonoid.nsmul_zero
+  nsmul_succ := AddCommMonoid.nsmul_succ
+  add_comm := AddCommMonoid.add_comm
+  mul := (· * ·)
   left_distrib := _
   right_distrib := _
   zero_mul := _
@@ -239,4 +232,3 @@ instance Semiring : Semiring R[X;φ] where
   npow := _
   npow_zero := _
   npow_succ := _
--/
