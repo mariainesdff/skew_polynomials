@@ -52,7 +52,7 @@ private irreducible_def add : R[X;φ] → R[X;φ] → R[X;φ]
 private irreducible_def neg {S : Type _} [Ring S] {ψ : S →+* S} : S[X;ψ] → S[X;ψ]
   | ⟨a⟩ => ⟨-a⟩
 
-private def AddMonoidAlgebra.mul' (φ : R →+* R) (f g : AddMonoidAlgebra R ℕ) :
+def AddMonoidAlgebra.mul' (φ : R →+* R) (f g : AddMonoidAlgebra R ℕ) :
   (AddMonoidAlgebra R ℕ) :=
   f.sum fun a₁ b₁ => g.sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * (φ^[a₁] b₂))
 
@@ -81,6 +81,9 @@ instance sub {S : Type u} [Ring S] {φ : S →+* S}: Sub S[X;φ] :=
 instance mul' : Mul R[X;φ] :=
   ⟨mul⟩
 
+theorem AddMonoidAlgebra.mul'_def (φ : R →+* R) {f g : AddMonoidAlgebra R ℕ} :
+    AddMonoidAlgebra.mul' φ f g = (f.sum fun a₁ b₁ => g.sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * (φ^[a₁] b₂))) :=
+  rfl
 
 instance smulZeroClass {S : Type _} [SMulZeroClass S R] : SMulZeroClass S R[X;φ] where
   smul r p := ⟨r • p.toFinsupp⟩
@@ -221,7 +224,7 @@ instance Semiring : Semiring R[X;φ] where
   add_comm := AddCommMonoid.add_comm
   left_distrib := sorry
   right_distrib := sorry
-  zero_mul := sorry
+  zero_mul := by intro a; rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def]; rw [FunLike.ext_iff] 
   mul_zero := sorry
   mul_assoc := sorry
   one_mul := sorry
