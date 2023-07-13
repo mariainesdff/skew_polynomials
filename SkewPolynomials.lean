@@ -217,15 +217,17 @@ instance semiring : Semiring R[X;φ] :=
     one  := 1
     add  := (· + ·)
     mul  := (· * ·)
+    natCast := fun n ↦ ⟨single 0 n⟩
     left_distrib := sorry
     right_distrib := sorry
-    zero_mul := by 
-      intro a
+    zero_mul := fun a ↦ by 
       rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero, sum_zero_index]
     mul_zero := sorry
     mul_assoc := sorry
     one_mul := sorry
     mul_one := sorry
-    natCast := sorry
-    natCast_zero := sorry
-    natCast_succ := sorry }
+    natCast_zero := by simp only [Nat.cast_zero, Finsupp.single_zero, ofFinsupp_eq_zero]
+    natCast_succ := fun n ↦ by 
+      rw [← toFinsupp_inj]
+      simp only [Nat.cast_add, Nat.cast_one, Finsupp.single_add, toFinsupp_add, toFinsupp_one]
+      rfl }
