@@ -21,8 +21,6 @@ universe u
 
 variable {R : Type u} {a b : R} {m n : ℕ}
 
-section Semiring
-
 variable [Semiring R] {φ : R →+* R} {p q : R[X;φ]} 
 
 theorem forall_iff_forall_finsupp (P : R[X;φ] → Prop) :
@@ -42,7 +40,6 @@ Since `R[X;φ]` is not defeq to `AddMonoidAlgebra R ℕ`, but instead is a struc
 it, we have to copy across all the arithmetic operators manually, along with the lemmas about how
 they unfold around `Polynomial.ofFinsupp` and `Polynomial.toFinsupp`.
 -/
-
 
 section AddMonoidAlgebra
 
@@ -207,9 +204,13 @@ instance inhabited : Inhabited R[X;φ] :=
 instance natCast : NatCast R[X;φ] :=
   ⟨fun n => SkewPolynomial.ofFinsupp n⟩
 
+end AddMonoidAlgebra
+
 instance addCommMonoid : AddCommMonoid R[X;φ] := 
   Function.Injective.addCommMonoid toFinsupp toFinsupp_injective
   toFinsupp_zero toFinsupp_add (fun _ _ => toFinsupp_smul _ _)
+
+variable (R φ)
 
 instance semiring : Semiring R[X;φ] :=
  {  SkewPolynomial.addCommMonoid with
@@ -217,7 +218,7 @@ instance semiring : Semiring R[X;φ] :=
     one  := 1
     add  := (· + ·)
     mul  := (· * ·)
-    natCast := fun n ↦ ⟨single 0 n⟩
+    natCast :=  fun n => SkewPolynomial.ofFinsupp n
     left_distrib := sorry
     right_distrib := sorry
     zero_mul := fun a ↦ by 
@@ -229,5 +230,21 @@ instance semiring : Semiring R[X;φ] :=
     natCast_zero := by simp only [Nat.cast_zero, Finsupp.single_zero, ofFinsupp_eq_zero]
     natCast_succ := fun n ↦ by 
       rw [← toFinsupp_inj]
-      simp only [Nat.cast_add, Nat.cast_one, Finsupp.single_add, toFinsupp_add, toFinsupp_one]
-      rfl }
+      simp only [Nat.cast_add, Nat.cast_one, Finsupp.single_add, toFinsupp_add, toFinsupp_one] }
+
+instance ring (S : Type _) [Ring S] (ψ : S →+* S) : Ring S[X;ψ] :=
+  { SkewPolynomial.semiring S ψ with
+    zero := 0
+    one  := 1
+    add  := (· + ·)
+    mul  := (· * ·)
+    neg := (neg)
+    sub := (· - ·)
+    natCast := fun n => ofFinsupp n
+    intCast := fun n ↦ ofFinsupp n
+    sub_eq_add_neg := sorry
+    add_left_neg := sorry
+    intCast_ofNat := sorry
+    intCast_negSucc := sorry }
+
+end SkewPolynomial
