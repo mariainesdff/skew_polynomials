@@ -224,8 +224,22 @@ instance semiring : Semiring R[X;φ] :=
     add  := (· + ·)
     mul  := (· * ·)
     natCast :=  fun n => SkewPolynomial.ofFinsupp n
-    left_distrib := sorry
-    right_distrib := sorry
+    left_distrib := by
+      intro f g h
+      rw [← toFinsupp_inj]
+      haveI := Classical.decEq ℕ
+      simp [mul_def, toFinsupp_mul, toFinsupp_add]
+      refine Eq.trans (congr_arg (sum f.toFinsupp) (funext₂ fun a₁ b₁ => sum_add_index ?_ ?_)) ?_ <;>
+      simp [mul_add, mul_zero, RingHom.iterate_map_zero, AddMonoidAlgebra.single_add,
+        RingHom.iterate_map_add, sum_add, AddMonoidAlgebra.mul'_def]
+    right_distrib := by
+      intro f g h
+      rw [← toFinsupp_inj]
+      haveI := Classical.decEq ℕ
+      simp [mul_def, toFinsupp_mul, toFinsupp_add]
+      refine Eq.trans (sum_add_index ?_ ?_) ?_ <;>
+      simp [add_mul, zero_mul, RingHom.iterate_map_zero, AddMonoidAlgebra.single_add,
+        RingHom.iterate_map_add, sum_add, AddMonoidAlgebra.mul'_def]
     zero_mul := fun a ↦ by 
       rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero, sum_zero_index]
     mul_zero := sorry
