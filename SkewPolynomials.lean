@@ -265,6 +265,7 @@ instance ring (S : Type _) [Ring S] (ψ : S →+* S) : Ring S[X;ψ] :=
     sub_eq_add_neg  := sorry
     add_left_neg    := sorry
     intCast_ofNat   := sorry
-    intCast_negSucc := sorry }
+    intCast_ofNat := fun n => by simp; rfl
+    intCast_negSucc := fun n => by rw [<- ofFinsupp_neg]; simp; rfl }
 
 end SkewPolynomial
