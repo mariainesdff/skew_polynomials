@@ -215,8 +215,6 @@ instance addCommMonoid : AddCommMonoid R[X;φ] :=
   Function.Injective.addCommMonoid toFinsupp toFinsupp_injective
   toFinsupp_zero toFinsupp_add (fun _ _ => toFinsupp_smul _ _)
 
-variable (R φ)
-
 theorem mul_assoc (a b c : R[X;φ]) : a * b * c = a * (b * c) := by
   rw [←toFinsupp_inj]
   simp only [toFinsupp_mul, AddMonoidAlgebra.mul'_def]
@@ -226,14 +224,20 @@ theorem mul_assoc (a b c : R[X;φ]) : a * b * c = a * (b * c) := by
   rw [AddMonoidAlgebra.sum_single_index, _root_.mul_assoc, RingHom.iterate_map_mul,
     ← Function.iterate_add_apply, add_assoc]
   pick_goal 4
-  . sorry
+  . intros n r1 r2
+    simp only [RingHom.iterate_map_add, mul_add, Finsupp.single_add]
   pick_goal 5
-  . sorry
+  . intros n r1 r2
+    sorry
   pick_goal 6
-  . sorry
+  . intros n r1 r2
+    simp_rw [add_mul,  AddMonoidAlgebra.single_add, sum_add]
   pick_goal 7
-  . sorry
+  . intros n r1 r2
+    simp_rw [add_mul,  AddMonoidAlgebra.single_add, sum_add]
   all_goals simp [RingHom.iterate_map_zero, mul_zero, AddMonoidAlgebra.single_zero]
+
+variable (R φ)
 
 instance semiring : Semiring R[X;φ] :=
  {  SkewPolynomial.addCommMonoid with
@@ -264,31 +268,7 @@ instance semiring : Semiring R[X;φ] :=
     mul_zero := fun a ↦ by 
       rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero]
       exact sum_zero
-    mul_assoc := by
-      intro f g p
-      rw [←toFinsupp_inj]
-      simp only [AddMonoidAlgebra.mul'_def,toFinsupp_mul]
-      rw [sum_sum_index]; congr; ext a₁ b₁
-      · rw [sum_sum_index]; congr;
-        · simp only
-          sorry
-        · sorry
-        · intro a
-          simp only [zero_mul, Finsupp.single_zero,Finsupp.single_zero, sum_zero]
-        · intro a b1 b2
-          have H2 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂))+(single (a + a₂) (b2 * (↑φ)^[a] b₂))) = (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂))) := by
-            simp only [sum_add,Finsupp.single_add]
-          have H3 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂)))= (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) ((b1+b2) * (↑φ)^[a] b₂))) := by
-            simp only [Finsupp.single_add, add_mul]
-          rw [←sum_add,H2,H3]
-      · intro a
-        simp only [zero_mul, Finsupp.single_zero,Finsupp.single_zero, sum_zero]
-      · intro a b1 b2
-        have H2 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂))+(single (a + a₂) (b2 * (↑φ)^[a] b₂))) = (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂))) := by
-          simp only [sum_add,Finsupp.single_add]
-        have H3 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂)))= (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) ((b1+b2) * (↑φ)^[a] b₂))) := by
-          simp only [Finsupp.single_add, add_mul]
-        rw [←sum_add,H2,H3]
+    mul_assoc := mul_assoc
     one_mul := fun a ↦ by
       rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_one]
       simp only [one_def, zero_add, iterate_zero, id_eq, zero_mul, Finsupp.single_zero, sum_zero, 
