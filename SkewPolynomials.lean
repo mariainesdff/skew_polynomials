@@ -6,7 +6,6 @@ noncomputable section
 structure SkewPolynomial (R : Type _) [Semiring R] (φ : R →+* R) where ofFinsupp ::
   toFinsupp : AddMonoidAlgebra R ℕ
 
-
 scoped[SkewPolynomial] notation:max R"[X;"φ"]" => SkewPolynomial R φ
 
 open AddMonoidAlgebra
@@ -53,7 +52,8 @@ def AddMonoidAlgebra.mul' (φ : R →+* R) (f g : AddMonoidAlgebra R ℕ) :
   (AddMonoidAlgebra R ℕ) :=
   f.sum fun a₁ b₁ => g.sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * (φ^[a₁] b₂))
 
-private def AddMonoidAlgebra.pow' (φ : R →+* R) : ℕ → (AddMonoidAlgebra R ℕ) → (AddMonoidAlgebra R ℕ) 
+private def AddMonoidAlgebra.pow' (φ : R →+* R) : 
+  ℕ → (AddMonoidAlgebra R ℕ) → (AddMonoidAlgebra R ℕ) 
   | 0, _ => 1
   | n + 1, f => AddMonoidAlgebra.mul' φ f (AddMonoidAlgebra.pow' φ n f)
 
@@ -79,7 +79,8 @@ instance mul' : Mul R[X;φ] :=
   ⟨mul⟩
 
 theorem AddMonoidAlgebra.mul'_def (φ : R →+* R) {f g : AddMonoidAlgebra R ℕ} :
-    AddMonoidAlgebra.mul' φ f g = (f.sum fun a₁ b₁ => g.sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * (φ^[a₁] b₂))) :=
+  AddMonoidAlgebra.mul' φ f g =
+    (f.sum fun a₁ b₁ => g.sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * (φ^[a₁] b₂))) :=
   rfl
 
 instance smulZeroClass {S : Type _} [SMulZeroClass S R] : SMulZeroClass S R[X;φ] where
@@ -106,7 +107,8 @@ theorem ofFinsupp_neg {S : Type u} [Ring S] {φ : S →+* S} {a} : (⟨-a⟩ : S
   show _ = neg _ by rw [neg_def]
 
 @[simp]
-theorem ofFinsupp_sub {S : Type u} [Ring S] {φ : S →+* S} {a b} : (⟨a - b⟩ : S[X;φ]) = ⟨a⟩ - ⟨b⟩ := by
+theorem ofFinsupp_sub {S : Type u} [Ring S] {φ : S →+* S} {a b} :
+  (⟨a - b⟩ : S[X;φ]) = ⟨a⟩ - ⟨b⟩ := by
   rw [sub_eq_add_neg, ofFinsupp_add, ofFinsupp_neg]
   rfl
 
@@ -141,7 +143,8 @@ theorem toFinsupp_add (a b : R[X;φ]) : (a + b).toFinsupp = a.toFinsupp + b.toFi
   rw [← ofFinsupp_add]
 
 @[simp]
-theorem toFinsupp_neg {S : Type u} [Ring S] {φ : S →+* S} (a : S[X;φ]) : (-a).toFinsupp = -a.toFinsupp := by
+theorem toFinsupp_neg {S : Type u} [Ring S] {φ : S →+* S} (a : S[X;φ]) :
+  (-a).toFinsupp = -a.toFinsupp := by
   cases a
   rw [← ofFinsupp_neg]
 
@@ -152,7 +155,8 @@ theorem toFinsupp_sub {S : Type u} [Ring S] {φ : S →+* S} (a b : S[X;φ]) :
   rfl
 
 @[simp]
-theorem toFinsupp_mul (a b : R[X;φ]) : (a * b).toFinsupp = AddMonoidAlgebra.mul' φ a.toFinsupp b.toFinsupp := by
+theorem toFinsupp_mul (a b : R[X;φ]) :
+  (a * b).toFinsupp = AddMonoidAlgebra.mul' φ a.toFinsupp b.toFinsupp := by
   cases a
   cases b
   rw [← ofFinsupp_mul]
@@ -164,7 +168,8 @@ theorem toFinsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b : R[X;φ]) :
   rfl
 
 @[simp]
-theorem toFinsupp_pow (a : R[X;φ]) (n : ℕ) : (a ^ n).toFinsupp = AddMonoidAlgebra.pow' φ n a.toFinsupp := by
+theorem toFinsupp_pow (a : R[X;φ]) (n : ℕ) :
+  (a ^ n).toFinsupp = AddMonoidAlgebra.pow' φ n a.toFinsupp := by
   cases a
   rw [← ofFinsupp_pow]
 
