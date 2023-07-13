@@ -52,7 +52,8 @@ private irreducible_def add : R[X;φ] → R[X;φ] → R[X;φ]
 private irreducible_def neg {S : Type _} [Ring S] {ψ : S →+* S} : S[X;ψ] → S[X;ψ]
   | ⟨a⟩ => ⟨-a⟩
 
-private def AddMonoidAlgebra.mul' (φ : R →+* R) (f g : AddMonoidAlgebra R ℕ): (AddMonoidAlgebra R ℕ) :=
+private def AddMonoidAlgebra.mul' (φ : R →+* R) (f g : AddMonoidAlgebra R ℕ) :
+  (AddMonoidAlgebra R ℕ) :=
   f.sum fun a₁ b₁ => g.sum fun a₂ b₂ => single (a₁ + a₂) (b₁ * (φ^[a₁] b₂))
 
 private def AddMonoidAlgebra.pow' (φ : R →+* R) : ℕ → (AddMonoidAlgebra R ℕ) → (AddMonoidAlgebra R ℕ) 
@@ -208,27 +209,23 @@ instance AddCommMonoid : AddCommMonoid R[X;φ] :=
   toFinsupp_zero toFinsupp_add (fun _ _ => toFinsupp_smul _ _)
 
 instance Semiring : Semiring R[X;φ] where
-  add := (· + ·)
-  add_assoc := AddCommMonoid.add_assoc
   zero := 0
+  one  := 1
+  add  := (· + ·)
+  mul  := (· * ·)
+  add_assoc := AddCommMonoid.add_assoc
   zero_add := AddCommMonoid.zero_add
   add_zero := AddCommMonoid.add_zero
-  nsmul := (· • ·)
   nsmul_zero := AddCommMonoid.nsmul_zero
   nsmul_succ := AddCommMonoid.nsmul_succ
   add_comm := AddCommMonoid.add_comm
-  mul := (· * ·)
-  left_distrib := _
-  right_distrib := _
-  zero_mul := _
-  mul_zero := _
-  mul_assoc := _
-  one := _
-  one_mul := _
-  mul_one := _
-  natCast := _
-  natCast_zero := _
-  natCast_succ := _
-  npow := _
-  npow_zero := _
-  npow_succ := _
+  left_distrib := sorry
+  right_distrib := sorry
+  zero_mul := sorry
+  mul_zero := sorry
+  mul_assoc := sorry
+  one_mul := sorry
+  mul_one := sorry
+  natCast := sorry
+  natCast_zero := sorry
+  natCast_succ := sorry
