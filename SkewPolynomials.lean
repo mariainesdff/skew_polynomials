@@ -246,7 +246,30 @@ instance semiring : Semiring R[X;φ] :=
     mul_zero := fun a ↦ by 
       rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero]
       exact sum_zero
-    mul_assoc := sorry
+    mul_assoc := by
+      intro f g p
+      rw [←toFinsupp_inj]
+      simp only [AddMonoidAlgebra.mul'_def,toFinsupp_mul]
+      rw [sum_sum_index]; congr; ext a₁ b₁
+      · rw [sum_sum_index]; congr;
+        · sorry
+        · sorry
+        · intro a
+          simp only [zero_mul, Finsupp.single_zero,Finsupp.single_zero, sum_zero]
+        · intro a b1 b2
+          have H2 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂))+(single (a + a₂) (b2 * (↑φ)^[a] b₂))) = (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂))) := by
+            simp only [sum_add,Finsupp.single_add]
+          have H3 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂)))= (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) ((b1+b2) * (↑φ)^[a] b₂))) := by
+            simp only [Finsupp.single_add, add_mul]
+          rw [←sum_add,H2,H3]
+      · intro a
+        simp only [zero_mul, Finsupp.single_zero,Finsupp.single_zero, sum_zero]
+      · intro a b1 b2
+        have H2 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂))+(single (a + a₂) (b2 * (↑φ)^[a] b₂))) = (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂))) := by
+          simp only [sum_add,Finsupp.single_add]
+        have H3 : (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) (b1 * (↑φ)^[a] b₂ +b2 * (↑φ)^[a] b₂)))= (sum p.toFinsupp fun a₂ b₂ => (single (a + a₂) ((b1+b2) * (↑φ)^[a] b₂))) := by
+          simp only [Finsupp.single_add, add_mul]
+        rw [←sum_add,H2,H3]
     one_mul := fun a ↦ by
       rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_one]
       simp only [one_def, zero_add, iterate_zero, id_eq, zero_mul, Finsupp.single_zero, sum_zero, 
