@@ -225,16 +225,16 @@ theorem mul_assoc (a b c : R[X;φ]) : a * b * c = a * (b * c) := by
     ← Function.iterate_add_apply, add_assoc]
   pick_goal 4
   . intros n r1 r2
-    simp only [RingHom.iterate_map_add, mul_add, Finsupp.single_add]
+    rw [RingHom.iterate_map_add, mul_add, AddMonoidAlgebra.single_add]
   pick_goal 5
   . intros n r1 r2
-    sorry
+    rw [RingHom.iterate_map_add, mul_add, AddMonoidAlgebra.single_add]
   pick_goal 6
   . intros n r1 r2
-    simp_rw [add_mul,  AddMonoidAlgebra.single_add, sum_add]
+    simp_rw [add_mul, AddMonoidAlgebra.single_add, sum_add]
   pick_goal 7
   . intros n r1 r2
-    simp_rw [add_mul,  AddMonoidAlgebra.single_add, sum_add]
+    simp_rw [add_mul, AddMonoidAlgebra.single_add, sum_add]
   all_goals simp [RingHom.iterate_map_zero, mul_zero, AddMonoidAlgebra.single_zero]
 
 variable (R φ)
