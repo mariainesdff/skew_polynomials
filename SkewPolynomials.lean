@@ -120,10 +120,10 @@ theorem ofFinsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b) :
 
 @[simp]
 theorem ofFinsupp_pow (a) (n : ℕ) : (⟨AddMonoidAlgebra.pow' φ n a⟩ : R[X;φ]) = ⟨a⟩ ^ n := by
-  change _ = AddMonoidAlgebra.pow' φ n _
+  change _ = npowRec n _
   induction n with
-  | zero        => simp [npowRec]
-  | succ n n_ih => simp [npowRec, n_ih, pow_succ]
+  | zero        => simp [npowRec]; rfl
+  | succ n n_ih => simp [npowRec, pow_succ]; rw [<- n_ih, <- ofFinsupp_mul]; rfl
 
 @[simp]
 theorem toFinsupp_zero : (0 : R[X;φ]).toFinsupp = 0 :=
@@ -151,7 +151,7 @@ theorem toFinsupp_sub {S : Type u} [Ring S] {φ : S →+* S} (a b : S[X;φ]) :
   rfl
 
 @[simp]
-theorem toFinsupp_mul (a b : R[X;φ]) : (a * b).toFinsupp = a.toFinsupp * b.toFinsupp := by
+theorem toFinsupp_mul (a b : R[X;φ]) : (a * b).toFinsupp = AddMonoidAlgebra.mul' φ a.toFinsupp b.toFinsupp := by
   cases a
   cases b
   rw [← ofFinsupp_mul]
@@ -163,13 +163,13 @@ theorem toFinsupp_smul {S : Type _} [SMulZeroClass S R] (a : S) (b : R[X;φ]) :
   rfl
 
 @[simp]
-theorem toFinsupp_pow (a : R[X;φ]) (n : ℕ) : (a ^ n).toFinsupp = a.toFinsupp ^ n := by
+theorem toFinsupp_pow (a : R[X;φ]) (n : ℕ) : (a ^ n).toFinsupp = AddMonoidAlgebra.pow' φ n a.toFinsupp := by
   cases a
   rw [← ofFinsupp_pow]
 
 theorem _root_.IsSMulRegular.polynomial {S : Type _} [Monoid S] [DistribMulAction S R] {a : S}
     (ha : IsSMulRegular R a) : IsSMulRegular R[X;φ] a
-  | ⟨_x⟩, ⟨_y⟩, h => congr_arg _ <| ha.finsupp (Polynomial.ofFinsupp.inj h)
+  | ⟨_x⟩, ⟨_y⟩, h => congr_arg _ <| ha.finsupp (SkewPolynomial.ofFinsupp.inj h)
 
 theorem toFinsupp_injective : Function.Injective (toFinsupp : R[X;φ] → AddMonoidAlgebra _ _) :=
   fun ⟨_x⟩ ⟨_y⟩ => congr_arg _
@@ -201,45 +201,42 @@ instance inhabited : Inhabited R[X;φ] :=
   ⟨0⟩
 
 instance natCast : NatCast R[X;φ] :=
-  ⟨fun n => Polynomial.ofFinsupp n⟩
+  ⟨fun n => SkewPolynomial.ofFinsupp n⟩
 
+/- instance semiring : Semiring R[X;φ] :=
+  Function.Injective.semiring toFinsupp toFinsupp_injective toFinsupp_zero toFinsupp_one
+    toFinsupp_add toFinsupp_mul (fun _ _ => toFinsupp_smul _ _) toFinsupp_pow fun _ => rfl
+
+instance monoidWithZero : MonoidWithZero R[X;φ] :=
+  Function.Injective.monoidWithZero toFinsupp toFinsupp_injective
 
 instance AddCommMonoid : AddCommMonoid R[X;φ] := 
-    { (inferInstance : AddCommMonoid (AddMonoidAlgebra R ℕ)) }
-  
+  Function.Injective.addCommMonoid toFinsupp toFinsupp_injective
+  toFinsupp_zero toFinsupp_add (fun _ _ => toFinsupp_smul _ _)
 
-instance Semiring : Semiring R[X;φ] :=
-  {Finsupp.addCommMonoid with
-    zero := 0
-    one := 1
-    mul := (· * ·)
-    add := (· + ·) 
-  
-    left_distrib := sorry
-    right_distrib := sorry
-    zero_mul := by
-      intros f
-      simp only [zero_mul]
-    mul_zero := by
-      intros f
-      simp
-    mul_assoc := sorry
-    one_mul := sorry
-    mul_one := sorry
-    natCast_zero := sorry
-    natCast_succ := sorry
-    npow := sorry
-    npow_zero := sorry
-    npow_succ := sorry }
-
-  
-
-
-namespace SkewMul
-
-
-
-
---set_option quotPrecheck false
-
---scoped[SkewMul] notation:1000 f "**"φ g => (hasMul' φ) f g
+instance Semiring : Semiring R[X;φ] where
+  add := _
+  add_assoc := _
+  zero := _
+  zero_add := _
+  add_zero := _
+  nsmul := _
+  nsmul_zero := _
+  nsmul_succ := _
+  add_comm := _
+  mul := _
+  left_distrib := _
+  right_distrib := _
+  zero_mul := _
+  mul_zero := _
+  mul_assoc := _
+  one := _
+  one_mul := _
+  mul_one := _
+  natCast := _
+  natCast_zero := _
+  natCast_succ := _
+  npow := _
+  npow_zero := _
+  npow_succ := _
+-/
