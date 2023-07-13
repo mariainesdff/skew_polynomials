@@ -217,6 +217,24 @@ instance addCommMonoid : AddCommMonoid R[X;φ] :=
 
 variable (R φ)
 
+theorem mul_assoc (a b c : R[X;φ]) : a * b * c = a * (b * c) := by
+  rw [←toFinsupp_inj]
+  simp only [toFinsupp_mul, AddMonoidAlgebra.mul'_def]
+  rw [sum_sum_index]; congr; ext a₁ b₁
+  rw [sum_sum_index, sum_sum_index]; congr; ext a₂ b₂
+  rw [sum_sum_index, AddMonoidAlgebra.sum_single_index]; congr; ext a₃ b₃
+  rw [AddMonoidAlgebra.sum_single_index, _root_.mul_assoc, RingHom.iterate_map_mul,
+    ← Function.iterate_add_apply, add_assoc]
+  pick_goal 4
+  . sorry
+  pick_goal 5
+  . sorry
+  pick_goal 6
+  . sorry
+  pick_goal 7
+  . sorry
+  all_goals simp [RingHom.iterate_map_zero, mul_zero, AddMonoidAlgebra.single_zero]
+
 instance semiring : Semiring R[X;φ] :=
  {  SkewPolynomial.addCommMonoid with
     zero := 0
@@ -252,7 +270,8 @@ instance semiring : Semiring R[X;φ] :=
       simp only [AddMonoidAlgebra.mul'_def,toFinsupp_mul]
       rw [sum_sum_index]; congr; ext a₁ b₁
       · rw [sum_sum_index]; congr;
-        · sorry
+        · simp only
+          sorry
         · sorry
         · intro a
           simp only [zero_mul, Finsupp.single_zero,Finsupp.single_zero, sum_zero]
