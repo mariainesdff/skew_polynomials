@@ -224,7 +224,9 @@ instance Semiring : Semiring R[X;φ] where
   add_comm := AddCommMonoid.add_comm
   left_distrib := sorry
   right_distrib := sorry
-  zero_mul := by intro a; rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def]; rw [FunLike.ext_iff] 
+  zero_mul := by 
+    intro a
+    rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero, sum_zero_index]
   mul_zero := sorry
   mul_assoc := sorry
   one_mul := sorry
