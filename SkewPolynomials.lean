@@ -207,30 +207,25 @@ instance inhabited : Inhabited R[X;φ] :=
 instance natCast : NatCast R[X;φ] :=
   ⟨fun n => SkewPolynomial.ofFinsupp n⟩
 
-instance AddCommMonoid : AddCommMonoid R[X;φ] := 
+instance addCommMonoid : AddCommMonoid R[X;φ] := 
   Function.Injective.addCommMonoid toFinsupp toFinsupp_injective
   toFinsupp_zero toFinsupp_add (fun _ _ => toFinsupp_smul _ _)
 
-instance Semiring : Semiring R[X;φ] where
-  zero := 0
-  one  := 1
-  add  := (· + ·)
-  mul  := (· * ·)
-  add_assoc := AddCommMonoid.add_assoc
-  zero_add := AddCommMonoid.zero_add
-  add_zero := AddCommMonoid.add_zero
-  nsmul_zero := AddCommMonoid.nsmul_zero
-  nsmul_succ := AddCommMonoid.nsmul_succ
-  add_comm := AddCommMonoid.add_comm
-  left_distrib := sorry
-  right_distrib := sorry
-  zero_mul := by 
-    intro a
-    rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero, sum_zero_index]
-  mul_zero := sorry
-  mul_assoc := sorry
-  one_mul := sorry
-  mul_one := sorry
-  natCast := sorry
-  natCast_zero := sorry
-  natCast_succ := sorry
+instance semiring : Semiring R[X;φ] :=
+ {  SkewPolynomial.addCommMonoid with
+    zero := 0
+    one  := 1
+    add  := (· + ·)
+    mul  := (· * ·)
+    left_distrib := sorry
+    right_distrib := sorry
+    zero_mul := by 
+      intro a
+      rw [← toFinsupp_inj, toFinsupp_mul, AddMonoidAlgebra.mul'_def, toFinsupp_zero, sum_zero_index]
+    mul_zero := sorry
+    mul_assoc := sorry
+    one_mul := sorry
+    mul_one := sorry
+    natCast := sorry
+    natCast_zero := sorry
+    natCast_succ := sorry }
