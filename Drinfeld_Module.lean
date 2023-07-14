@@ -7,20 +7,21 @@ variable (p : ℕ) [h_prime : Fact p.Prime] (n : ℕ)
 scoped[DrinfeldModule] notation:max "𝔽_["p"]^"n => GaloisField p n
 
 
-open DrinfeldModule
+open DrinfeldModule Polynomial SkewPolynomial
 
-#check 𝔽_[p]^n
+variable (L : Type _) [Field L] [Algebra (𝔽_[p]^n)[X] L]
 
-def Frob : (𝔽_[p]^n) →+* 𝔽_[p]^n where
+noncomputable def Frob : L →+* L where
   toFun     := fun x ↦ x^(p^n)
-  map_one'  := _
-  map_mul'  := _
-  map_zero' := _
-  map_add'  := _
-
+  map_one'  := sorry
+  map_mul'  := sorry
+  map_zero' := sorry
+  map_add'  := sorry
 namespace DrinfeldModule
 
 
+structure DrinfeldModule where
+  toFun : (𝔽_[p]^n)[X] → L[X; Frob p n L] 
 
 end DrinfeldModule
 
