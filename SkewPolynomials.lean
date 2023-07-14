@@ -173,7 +173,7 @@ theorem toFinsupp_pow (a : R[X;φ]) (n : ℕ) :
   cases a
   rw [← ofFinsupp_pow]
 
-theorem _root_.IsSMulRegular.polynomial {S : Type _} [Monoid S] [DistribMulAction S R] {a : S}
+theorem _root_.IsSMulRegular.skewPolynomial {S : Type _} [Monoid S] [DistribMulAction S R] {a : S}
     (ha : IsSMulRegular R a) : IsSMulRegular R[X;φ] a
   | ⟨_x⟩, ⟨_y⟩, h => congr_arg _ <| ha.finsupp (SkewPolynomial.ofFinsupp.inj h)
 
