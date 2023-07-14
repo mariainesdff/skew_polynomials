@@ -209,6 +209,9 @@ instance inhabited : Inhabited R[X;φ] :=
 instance natCast : NatCast R[X;φ] :=
   ⟨fun n => SkewPolynomial.ofFinsupp n⟩
 
+def coeff : R[X;φ] → ℕ → R
+  | ⟨p⟩ => p
+
 end AddMonoidAlgebra
 
 instance addCommMonoid : AddCommMonoid R[X;φ] := 
