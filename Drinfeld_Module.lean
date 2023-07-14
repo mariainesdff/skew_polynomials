@@ -13,7 +13,7 @@ variable (L : Type _) [Field L] [Algebra (𝔽_[p]^n)[X] L]
 
 noncomputable def Frob : L →+* L where
   toFun     := fun x ↦ x^(p^n)
-  map_one'  := sorry
+  map_one'  := by simp only [one_pow]
   map_mul'  := sorry
   map_zero' := sorry
   map_add'  := sorry
