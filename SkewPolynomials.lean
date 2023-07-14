@@ -305,4 +305,6 @@ instance ring (S : Type _) [Ring S] (ψ : S →+* S) : Ring S[X;ψ] :=
     intCast_ofNat := fun n => by simp; rfl
     intCast_negSucc := fun n => by rw [<- ofFinsupp_neg]; simp; rfl }
 
+instance : Coe R R[X; φ] := sorry
+
 end SkewPolynomial

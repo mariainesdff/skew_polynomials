@@ -21,16 +21,9 @@ namespace DrinfeldModule
 
 instance : Algebra (𝔽_[p]^n) L[X; Frob p n L] := sorry
 
-variable (a : (𝔽_[p]^n)[X])
-
-#check (algebraMap (𝔽_[p]^n)[X] L).toFun a
-
 structure DrinfeldModule extends (𝔽_[p]^n)[X] →ₐ[(𝔽_[p]^n)] L[X; Frob p n L] where
   deriv : ∀ (a : (𝔽_[p]^n)[X]), (toFun a).coeff 0 = (algebraMap (𝔽_[p]^n)[X] L a)
-  ne_trivial : ∃ (a : (𝔽_[p]^n)[X]), toFun a ≠ 0 -- TODO: fix ↑((algebraMap (𝔽_[p]^n)[X] L).toFun a)
+  ne_trivial : ∃ (a : (𝔽_[p]^n)[X]), toFun a ≠ ((algebraMap (𝔽_[p]^n)[X] L) a)
 
 end DrinfeldModule
-
-
---def Frob : 
 
