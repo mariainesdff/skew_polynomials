@@ -17,8 +17,8 @@ noncomputable def Frob : L →+* L where
   map_mul'  := fun x y ↦ by
     simp; rw [mul_pow]
   map_zero' := by 
-    simp only [ne_eq, gt_iff_lt, zero_pow_eq_zero]
-    refine' pow_pos (Nat.Prime.pos h_prime.1) _
+    simp [zero_pow]
+    exact Nat.pos_pow_of_pos n Fin.size_positive'
   map_add'  := fun x y ↦ by
     simp; 
     have hFieldAlg: Algebra (𝔽_[p]^n) L := by
